@@ -64,11 +64,13 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onCancel() {
-                        imagesTable.visibility = View.INVISIBLE
+                        //　ここ記入するとひたすらモーダル出てくるの繰り返し
+                        // imagesTable.visibility = View.INVISIBLE
                     }
 
                     override fun onError(exception: FacebookException) {
-                        imagesTable.visibility = View.INVISIBLE
+                        //　ここ記入するとひたすらモーダル出てくるの繰り返し
+//                        imagesTable.visibility = View.INVISIBLE
                     }
                 })
 

@@ -2,7 +2,12 @@ package com.ixap2i.floap
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 
-class ImageViewModel(application: Application) : AndroidViewModel(application) {
+class ImageListViewModel(application: Application) : AndroidViewModel(application) {
+
+//    private val imageListObserval: LiveData<List<ImageRepository>>
+//    = ImageRepository().getInstance()
+
 
 }

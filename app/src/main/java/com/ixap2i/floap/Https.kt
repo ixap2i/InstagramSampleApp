@@ -25,5 +25,9 @@ fun Application.main() {
         get("/hello") {
             call.respondText(service.sayHello())
         }
+
+//        get("https://api.instagram.com/oauth/authorize/?client_id=2618669434829252&redirect_uri=http://www.yahoo.co.jp/&response_type=code") {
+//            call.respondText(service.sayHello())
+//        }
     }
 }
