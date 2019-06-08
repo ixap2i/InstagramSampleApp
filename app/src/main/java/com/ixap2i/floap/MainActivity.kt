@@ -14,6 +14,7 @@ import com.facebook.login.LoginManager
 import com.facebook.AccessToken
 
 import android.content.Intent
+import android.view.View
 import android.widget.ScrollView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.koin.androidContext
@@ -23,7 +24,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     lateinit var loginButton: LoginButton
     lateinit var callbackManager: CallbackManager
-
     lateinit var imagesTable: ScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,34 +44,35 @@ class MainActivity : AppCompatActivity() {
 
         val accessToken = AccessToken.getCurrentAccessToken()
         val isLoggedIn = accessToken != null && !accessToken.isExpired
-
+        loginButton = findViewById(R.id.login_button)
+        imagesTable = findViewById(R.id.table_view)
 
         if(isLoggedIn) {
             LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile"));
             LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("pages_show_list"))
-
+            imagesTable.visibility = View.VISIBLE
         } else {
+            imagesTable.visibility = View.INVISIBLE
+
             LoginManager.getInstance().registerCallback(callbackManager,
                 object : FacebookCallback<LoginResult> {
                     override fun onSuccess(loginResult: LoginResult) {
                         loginButton.setPermissions("email")
                         LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile"))
                         LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("pages_show_list"))
-
+                        imagesTable.visibility = View.VISIBLE
                     }
 
                     override fun onCancel() {
-                        // App code
+                        imagesTable.visibility = View.INVISIBLE
                     }
 
                     override fun onError(exception: FacebookException) {
-                        // App code
+                        imagesTable.visibility = View.INVISIBLE
                     }
                 })
 
         }
-
-        loginButton = findViewById(R.id.login_button)
 
 //        fab.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
