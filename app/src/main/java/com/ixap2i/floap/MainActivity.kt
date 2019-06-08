@@ -1,32 +1,37 @@
 package com.ixap2i.floap
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
-import com.facebook.CallbackManager
 
-import kotlinx.android.synthetic.main.activity_main.*
+import com.facebook.CallbackManager
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.FacebookCallback
 import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
-import android.content.Intent
 import com.facebook.AccessToken
+
+import android.content.Intent
+import android.widget.ScrollView
+import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import java.util.*
 
-
-lateinit var loginButton: LoginButton
-lateinit var callbackManager: CallbackManager
-
 class MainActivity : AppCompatActivity() {
+    lateinit var loginButton: LoginButton
+    lateinit var callbackManager: CallbackManager
+
+    lateinit var imagesTable: ScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+
+
         startKoin {
             // Android context
             androidContext(this@MainActivity)
@@ -34,55 +39,44 @@ class MainActivity : AppCompatActivity() {
             modules(module)
         }
 
-        callbackManager = CallbackManager.Factory.create();
-
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-
-
-        loginButton = findViewById(R.id.login_button) as LoginButton
-        loginButton.setReadPermissions("email")
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                // App code
-            }
-
-            override fun onCancel() {
-                // App code
-            }
-
-            override fun onError(exception: FacebookException) {
-                // App code
-            }
-        })
-
-        LoginManager.getInstance().registerCallback(callbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
-                    // App code
-                }
-
-                override fun onCancel() {
-                    // App code
-                }
-
-                override fun onError(exception: FacebookException) {
-                    // App code
-                }
-            })
+        callbackManager = CallbackManager.Factory.create()
 
 
         val accessToken = AccessToken.getCurrentAccessToken()
         val isLoggedIn = accessToken != null && !accessToken.isExpired
 
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        if(isLoggedIn) {
+            LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile"));
+            LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("pages_show_list"))
+
+        } else {
+            LoginManager.getInstance().registerCallback(callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(loginResult: LoginResult) {
+                        loginButton.setPermissions("email")
+                        LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile"))
+                        LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("pages_show_list"))
+
+                    }
+
+                    override fun onCancel() {
+                        // App code
+                    }
+
+                    override fun onError(exception: FacebookException) {
+                        // App code
+                    }
+                })
+
         }
+
+        loginButton = findViewById(R.id.login_button)
+
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
