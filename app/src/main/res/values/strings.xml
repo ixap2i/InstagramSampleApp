@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">floap</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="facebook_app_id">2618669434829252</string>
+    <string name="fb_login_protocol_scheme">fb2618669434829252</string>
+
+</resources>
