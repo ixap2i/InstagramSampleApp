@@ -15,6 +15,8 @@ import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
 import android.content.Intent
 import com.facebook.AccessToken
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import java.util.*
 
 
@@ -25,6 +27,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        startKoin {
+            // Android context
+            androidContext(this@MainActivity)
+            // modules
+            modules(module)
+        }
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -34,8 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         loginButton = findViewById(R.id.login_button) as LoginButton
         loginButton.setReadPermissions("email")
-        // If using in a fragment
-//        loginButton.setFragment(this@MainActivity)
 
         // Callback registration
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
