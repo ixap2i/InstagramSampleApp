@@ -5,17 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 
-import com.facebook.CallbackManager
-import com.facebook.FacebookException
 import com.facebook.login.LoginResult
-import com.facebook.FacebookCallback
 import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
-import com.facebook.AccessToken
 
 import android.content.Intent
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.ScrollView
+import com.facebook.*
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -24,7 +23,10 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     lateinit var loginButton: LoginButton
     lateinit var callbackManager: CallbackManager
-    lateinit var imagesTable: ScrollView
+    lateinit var accessTokenTraker: AccessTokenTracker
+    lateinit var imagesTable: LinearLayout
+    val accessToken = AccessToken.getCurrentAccessToken()
+    val isLoggedIn = accessToken != null && !accessToken.isExpired
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,46 +42,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         callbackManager = CallbackManager.Factory.create()
-
-
-        val accessToken = AccessToken.getCurrentAccessToken()
-        val isLoggedIn = accessToken != null && !accessToken.isExpired
-        loginButton = findViewById(R.id.login_button)
-        imagesTable = findViewById(R.id.table_view)
-
-        if(isLoggedIn) {
-            LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile"));
-            LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("pages_show_list"))
-            imagesTable.visibility = View.VISIBLE
-        } else {
-            imagesTable.visibility = View.INVISIBLE
-
-            LoginManager.getInstance().registerCallback(callbackManager,
-                object : FacebookCallback<LoginResult> {
-                    override fun onSuccess(loginResult: LoginResult) {
-                        loginButton.setPermissions("email")
-                        LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("public_profile"))
-                        LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("pages_show_list"))
-                        imagesTable.visibility = View.VISIBLE
-                    }
-
-                    override fun onCancel() {
-                        //　ここ記入するとひたすらモーダル出てくるの繰り返し
-                        // imagesTable.visibility = View.INVISIBLE
-                    }
-
-                    override fun onError(exception: FacebookException) {
-                        //　ここ記入するとひたすらモーダル出てくるの繰り返し
-//                        imagesTable.visibility = View.INVISIBLE
-                    }
-                })
-
+        accessTokenTraker  = object: AccessTokenTracker() {
+            override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
+                if(currentAccessToken === null) {
+                    imagesTable.visibility = View.INVISIBLE
+                } else if(currentAccessToken !== oldAccessToken) {
+                    imagesTable.visibility = View.VISIBLE
+                }
+            }
         }
 
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
+        loginButton = findViewById(R.id.login_button)
+
+        LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("email"))
+
+
+        imagesTable = findViewById(R.id.table_view)
+
+        LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
