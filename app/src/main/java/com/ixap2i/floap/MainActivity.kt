@@ -4,20 +4,24 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
-
-import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
 
 import android.content.Intent
-import android.view.View
+import android.util.Log
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import com.facebook.*
-import com.google.android.material.snackbar.Snackbar
+import io.ktor.application.Application
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.get
+import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.core.parameter.ParametersDefinition
+import org.koin.core.qualifier.Qualifier
+import org.koin.core.scope.Scope
+import org.koin.dsl.module
+import java.lang.reflect.ParameterizedType
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -38,28 +42,33 @@ class MainActivity : AppCompatActivity() {
             // Android context
             androidContext(this@MainActivity)
             // modules
-            modules(module)
         }
 
-        callbackManager = CallbackManager.Factory.create()
-        accessTokenTraker  = object: AccessTokenTracker() {
-            override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
-                if(currentAccessToken === null) {
-                    imagesTable.visibility = View.INVISIBLE
-                } else if(currentAccessToken !== oldAccessToken) {
-                    imagesTable.visibility = View.VISIBLE
-                }
-            }
+
+        val hello = module {
+            single<ImageService> { ImageServiceImpl(get()) }
         }
+
+        hello.apply {
+
+        }
+        val qualifier: Qualifier? = null
+        val parameters: ParametersDefinition? = null
+
+        val sample = getKoin().get<ImageServiceImpl>(qualifier, parameters).getCode()
+        Log.d("", "${sample}")
 
         loginButton = findViewById(R.id.login_button)
+        imagesTable = findViewById(R.id.table_view)
+
+        callbackManager = CallbackManager.Factory.create()
 
         LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("email"))
 
-
-        imagesTable = findViewById(R.id.table_view)
-
+        accessTokenTraker  = LoginServiceImpl().checkLoginStatus(imagesTable)
         LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -2,18 +2,30 @@ package com.ixap2i.floap
 
 import android.view.View
 import android.widget.LinearLayout
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
+import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.google.android.material.snackbar.Snackbar
 
 interface LoginService {
-    fun loginCallBack(loginButton: LoginButton, flag: Boolean, eventView: LinearLayout, callbackManager: CallbackManager): Unit
+    fun loginCallBack(loginButton: LoginButton, flag: Boolean, eventView: LinearLayout, callbackManager: CallbackManager)
+
+    fun checkLoginStatus(eventView: LinearLayout): AccessTokenTracker
 }
 
 class LoginServiceImpl: LoginService {
+    override fun checkLoginStatus(eventView: LinearLayout): AccessTokenTracker {
+        return object: AccessTokenTracker() {
+            override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
+                if(currentAccessToken === null) {
+                    eventView.visibility = View.INVISIBLE
+                } else if(currentAccessToken !== oldAccessToken) {
+                    eventView.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
     override fun loginCallBack(loginButton: LoginButton, flag: Boolean, eventView: LinearLayout, callbackManager: CallbackManager): Unit {
         loginButton.registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
             override fun onError(error: FacebookException?) {

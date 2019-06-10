@@ -22,12 +22,9 @@ fun Application.main() {
     val service: ImageService by inject()
 
     routing {
-        get("/hello") {
-            call.respondText(service.sayHello())
+        get("https://api.instagram.com/oauth/authorize/?client_id=185bc9b4b55a4afe9922aed4db639b2b&redirect_uri=https://www.yahoo.co.jp/&response_type=code") {
+            call.respondText(service.getCode())
         }
 
-//        get("https://api.instagram.com/oauth/authorize/?client_id=2618669434829252&redirect_uri=http://www.yahoo.co.jp/&response_type=code") {
-//            call.respondText(service.sayHello())
-//        }
     }
 }

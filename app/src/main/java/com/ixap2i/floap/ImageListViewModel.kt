@@ -9,5 +9,7 @@ class ImageListViewModel(application: Application) : AndroidViewModel(applicatio
 //    private val imageListObserval: LiveData<List<ImageRepository>>
 //    = ImageRepository().getInstance()
 
-
+    override fun <T : Application> getApplication(): T {
+        return super.getApplication()
+    }
 }
