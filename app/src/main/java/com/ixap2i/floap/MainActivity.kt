@@ -8,21 +8,10 @@ import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
 
 import android.content.Intent
-import android.util.Log
 import android.widget.LinearLayout
 import com.facebook.*
-import io.ktor.application.Application
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.getKoin
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
-import org.koin.core.parameter.ParametersDefinition
-import org.koin.core.qualifier.Qualifier
-import org.koin.core.scope.Scope
-import org.koin.dsl.module
-import java.lang.reflect.ParameterizedType
-import java.util.*
+import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginButton: LoginButton
@@ -36,27 +25,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-
-        startKoin {
-            // Android context
-            androidContext(this@MainActivity)
-            // modules
-        }
-
-
-        val hello = module {
-            single<ImageService> { ImageServiceImpl(get()) }
-        }
-
-        hello.apply {
-
-        }
-        val qualifier: Qualifier? = null
-        val parameters: ParametersDefinition? = null
-
-        val sample = getKoin().get<ImageServiceImpl>(qualifier, parameters).getCode()
-        Log.d("", "${sample}")
 
         loginButton = findViewById(R.id.login_button)
         imagesTable = findViewById(R.id.table_view)

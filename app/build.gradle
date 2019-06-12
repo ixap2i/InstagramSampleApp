@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+// kaptを忘れるとktor周りがworkしない
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -27,7 +28,9 @@ android {
         exclude 'META-INF/kotlinx-io.kotlin_module'
         exclude 'META-INF/kotlinx-coroutines-io.kotlin_module'
         exclude 'META-INF/atomicfu.kotlin_module'
-
+        exclude 'META-INF/io.netty.versions.properties'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/kotlinx-coroutines-core.kotlin_module'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,7 +56,13 @@ dependencies {
 
 
     implementation "org.koin:koin-ktor:$koin_version"
+    implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
+    implementation "org.koin:koin-android:$koin_version"
+    testImplementation "org.koin:koin-test:$koin_version"
+
+    implementation "io.ktor:ktor-server-netty:1.2.1"
+    implementation "io.ktor:ktor-gson:1.2.1"
 
     implementation "com.squareup.moshi:moshi:1.8.0"
     implementation 'se.ansman.kotshi:api:2.0'
@@ -61,4 +70,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:3.14.1"
     testImplementation "com.squareup.okhttp3:mockwebserver:3.14.1"
 
+}
+repositories {
+    maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
 }
