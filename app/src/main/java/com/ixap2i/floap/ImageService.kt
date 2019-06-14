@@ -1,5 +1,13 @@
 package com.ixap2i.floap
 
+import com.facebook.internal.ImageResponse
+
+class ImageStore(dispatcher: Dispatcher) {
+    val image: (suspend (ImageResponse) -> Unit) = {
+//        dispatcher.dispatch(ImageLoaded(it))
+    }
+}
+
 interface ImageService {
     fun getCode(): String
 
