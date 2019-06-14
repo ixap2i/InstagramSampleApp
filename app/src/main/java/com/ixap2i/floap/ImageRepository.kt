@@ -7,20 +7,9 @@ import androidx.lifecycle.ViewModel
 class ImageRepository: ViewModel() {
     fun getHello(): String = "Ktor & Koin"
 
-
     private fun ProjectRepository() {
-
-        // API
-
         // kotshiでシリアライズクラスを導入
-//        val imageService: ImageService
     }
-//    fun getInstance(): ImageRepository {
-//        module.viewModel {
-//
-//        }
-//    }
-
 }
 
 
