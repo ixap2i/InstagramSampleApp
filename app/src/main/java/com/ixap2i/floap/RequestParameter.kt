@@ -10,8 +10,6 @@ interface RequestParameter {
 val FILTERED_VAL get() = "[FILTERED]"
 
 
-
-
 interface ImageResponse {
     val phoneNumber: String
     val accessKey: String
