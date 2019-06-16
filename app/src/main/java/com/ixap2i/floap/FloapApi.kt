@@ -6,10 +6,5 @@ interface FloapApi {
 
     fun resetHeader()
 
-    suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse> {
-        return createRequestResult<ImageResponse, ImageErrorResponse>(
-            responseDeserializationStrategy = ImageRepository.serializer(),
-            errorResponseFactory = ImageErrorResponse()
-        ) {}
-    }
+    suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse>
 }
