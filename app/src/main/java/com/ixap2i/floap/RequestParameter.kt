@@ -1,7 +1,6 @@
 package com.ixap2i.floap
 
-import io.ktor.http.HttpStatusCode
-import io.netty.handler.codec.http.HttpResponse
+import okhttp3.Response
 
 interface RequestParameter {
     fun toFilterParams(): List<Pair<String, String>>
@@ -21,6 +20,6 @@ enum class ImageErrorResponse {
 }
 
 class BadResponseStatusException(
-    val statusCode: HttpStatusCode,
-    val response: HttpResponse
+    val statusCode: String,
+    val response: Response
 ) : IllegalStateException("Received bad status code: $statusCode. Expected status code < 300.")
