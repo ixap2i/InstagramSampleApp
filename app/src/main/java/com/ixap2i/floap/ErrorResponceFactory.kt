@@ -1,4 +1,5 @@
 package com.ixap2i.floap
 
-interface ErrorResponceFactory {
+interface ErrorResponseFactory<T> {
+    fun create(jsonString: String): T
 }
