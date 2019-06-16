@@ -3,7 +3,6 @@ package com.ixap2i.floap
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.json.JsonElementTypeMismatchException
 
 
 @Serializable
@@ -15,7 +14,7 @@ interface ErrorResponseFactory<T> {
     fun create(jsonString: String): T
 }
 
-object PhoneNumberErrorResponseFactory : ErrorResponseFactory<ImageErrorResponse> {
+object ImageErrorResponseFactory : ErrorResponseFactory<ImageErrorResponse> {
 
     override fun create(jsonString: String): ImageErrorResponse {
         // TODO: parse to kotshi
