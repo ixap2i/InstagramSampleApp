@@ -19,7 +19,7 @@ class ImageRepository: ViewModel() {
 abstract class ImageResponceImpl(
     @field:Json(name = "pagination") var pagination: Pagination,
     @field:Json(name = "cooking_records") var cookingRecords: List<ImageRecord>
-) : ImageResponse
+): ImageResponse
 
 @JsonSerializable
 data class Pagination(
@@ -28,20 +28,20 @@ data class Pagination(
     val limit: String
 )
 
-@KotshiJsonAdapterFactory
-data class Album(
-    @field:Json(name = "pagination") var pagination: Pagination,
-    @field:Json(name = "cooking_records") var cookingRecords: List<ImageRecord>
-) {
-
-    companion object {
-        val INSTANCE: Companion = Album
-        @ToJson
-        fun toJson(writer: JsonWriter, value: ImageRecord, stringAdapter: JsonAdapter<ImageRecord>) {
-            stringAdapter.toJson(writer, value)
-        }
-    }
-}
+//@KotshiJsonAdapterFactory
+//data class Album(
+//    @field:Json(name = "pagination") var pagination: Pagination,
+//    @field:Json(name = "cooking_records") var cookingRecords: List<ImageRecord>
+//) {
+//
+//    companion object {
+//        val INSTANCE: Companion = Album
+//        @ToJson
+//        fun toJson(writer: JsonWriter, value: ImageRecord, stringAdapter: JsonAdapter<ImageRecord>) {
+//            stringAdapter.toJson(writer, value)
+//        }
+//    }
+//}
 
 data class ImageRecord(
     val image_url: String?,
