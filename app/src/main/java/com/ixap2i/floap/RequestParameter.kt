@@ -16,7 +16,7 @@ interface ImageResponse {
 }
 
 enum class ImageErrorResponse {
-    PHONE_NUMBER_INVALID, PHONE_NUMBER_REGISTERED
+    USER_ID_INVALID, PHONE_NUMBER_REGISTERED
 }
 
 class BadResponseStatusException(
