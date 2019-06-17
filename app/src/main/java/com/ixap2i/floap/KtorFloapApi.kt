@@ -8,12 +8,11 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.Json
 
 
-class KtorFloapApi : FloapApi {
+class KtorFloapApi : FloapApi, ImageRepository {
     override val OkHttp: Any
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-
-    private val apiEndpoint = "https://api.instagram.com/oauth/authorize/"
+    private val apiEndpoint = "https://api.instagram.com/v1/self/media/recent?access_token="
 
     private val httpClient = OkHttpClient()
 
@@ -43,17 +42,10 @@ class KtorFloapApi : FloapApi {
     }
 
     override suspend fun getUserImage() :Result<ImageResponse, ImageErrorResponse> {
-
         return createRequestResult<ImageResponse, ImageResponceImpl, ImageErrorResponse>(
-//            responseDeserializationStrategy = ImageResponceImpl().cookingRecords,
-//            errorResponseFactory = PhoneNumberErrorResponseFactory
-        ) {
-//            method = HttpMethod.Post
-//            contentType(ContentType.Application.Json)
-//            url("$apiEndpoint/sms_authentications")
-//            body = PhoneNumberParameter(phoneNumber)
-        }.getResult()
-//        return run("$apiEndpoint/sms_authentications")
+            responseDeserializationStrategy = null,
+            errorResponseFactory = ImageErrorResponseFactory
+        ) {}.getResult()
     }
 
 
@@ -72,7 +64,7 @@ class KtorFloapApi : FloapApi {
             lateinit var response: Response
             val request = Request.Builder()
                 .headers(okhttp3.Headers.of("", "", ""))
-                .url("$apiEndpoint/sms_authentications")
+                .url("$apiEndpoint/$ACCESS_TOKEN_KEY")
                 .build()
                 response = httpClient.newCall(request).execute()
                 responseBody = response.body()!!.string()

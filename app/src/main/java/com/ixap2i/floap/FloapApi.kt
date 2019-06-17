@@ -6,5 +6,5 @@ interface FloapApi {
 
     fun resetHeader()
 
-    suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse>
+//    suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse>
 }

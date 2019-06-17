@@ -11,9 +11,8 @@ import kotlin.collections.HashMap
 
 // TODO repositoryにlivedataの実装
 // TODO https://qiita.com/Tsutou/items/69a28ebbd69b69e51703
-class ImageRepository: ViewModel() {
-    fun getHello(): String = "Ktor & Koin"
-
+interface ImageRepository {
+    suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse>
 }
 
 @KotshiJsonAdapterFactory

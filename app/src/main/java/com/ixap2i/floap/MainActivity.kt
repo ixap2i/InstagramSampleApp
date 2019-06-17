@@ -11,6 +11,9 @@ import android.content.Intent
 import android.widget.LinearLayout
 import com.facebook.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.Koin
+import org.koin.ktor.ext.Koin.Feature.install
 import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
@@ -21,10 +24,16 @@ class MainActivity : AppCompatActivity() {
     val accessToken = AccessToken.getCurrentAccessToken()
     val isLoggedIn = accessToken != null && !accessToken.isExpired
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        val viewModel: ImageListViewModel by viewModel()
+
+//        install(Koin) {
+//
+//        }
 
         loginButton = findViewById(R.id.login_button)
         imagesTable = findViewById(R.id.table_view)
@@ -36,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         accessTokenTraker  = LoginServiceImpl().checkLoginStatus(imagesTable)
         LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
 
-
+        viewModel.getImageResponse()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
