@@ -11,9 +11,14 @@ import android.content.Intent
 import android.widget.LinearLayout
 import com.facebook.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.get
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.Koin
-import org.koin.ktor.ext.Koin.Feature.install
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
@@ -31,10 +36,21 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         val viewModel: ImageListViewModel by viewModel()
 
-//        install(Koin) {
-//
-//        }
+        val appModule = module {
+            single { FloapApplication() }
+            single { KtorFloapApi() }
+            single<ImageRepository> { KtorFloapApi() }
+            viewModel {
+                ImageListViewModel(application)
+            }
+        }
 
+        startKoin {
+            // declare used Android context
+            androidContext(this@MainActivity)
+            // declare modules
+            modules(appModule)
+        }
         loginButton = findViewById(R.id.login_button)
         imagesTable = findViewById(R.id.table_view)
 
@@ -45,7 +61,11 @@ class MainActivity : AppCompatActivity() {
         accessTokenTraker  = LoginServiceImpl().checkLoginStatus(imagesTable)
         LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
 
-        viewModel.getImageResponse()
+        val imgRepo = get<ImageRepository>()
+
+        GlobalScope.launch {
+            val result = imgRepo.getUserImage()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
