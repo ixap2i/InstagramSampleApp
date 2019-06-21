@@ -12,7 +12,7 @@ class KtorFloapApi : FloapApi, ImageRepository {
     override val OkHttp: Any
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
-    private val apiEndpoint = "https://api.instagram.com/v1/self/media/recent?access_token="
+    private val apiEndpoint = "https://api.instagram.com/v1/users/1298128612/media/recent?access_token="
 
     private val httpClient = OkHttpClient()
 
@@ -62,10 +62,13 @@ class KtorFloapApi : FloapApi, ImageRepository {
         var responseBody: String? = null
         try {
             lateinit var response: Response
+
+//            .headers(okhttp3.Headers.of("", "", ""))
+
             val request = Request.Builder()
-                .headers(okhttp3.Headers.of("", "", ""))
-                .url("$apiEndpoint/$ACCESS_TOKEN_KEY")
+                .url("$apiEndpoint$ACCESS_TOKEN_KEY")
                 .build()
+
                 response = httpClient.newCall(request).execute()
                 responseBody = response.body()!!.string()
 
