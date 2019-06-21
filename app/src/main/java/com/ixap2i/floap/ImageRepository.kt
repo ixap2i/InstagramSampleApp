@@ -18,7 +18,7 @@ interface ImageRepository {
 @KotshiJsonAdapterFactory
 abstract class ImageResponceImpl(
     @field:Json(name = "pagination") var pagination: Pagination,
-    @field:Json(name = "cooking_records") var cookingRecords: List<ImageRecord>
+    @field:Json(name = "data") var cookingRecords: Array<Data>
 ): ImageResponse {
     companion object {
         val INSTANCE: Companion = ImageResponceImpl
@@ -28,6 +28,33 @@ abstract class ImageResponceImpl(
         }
     }
 }
+
+
+//@KotshiJsonAdapterFactory
+//abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
+//    companion object {
+//        val INSTANCE = KotshiApplicationJsonAdapterFactory()
+//    }
+//}
+
+@JsonSerializable
+data class Data(
+    val caption: Caption,
+    val comments: Comments,
+    val created_time: String,
+    val filter: String,
+    val id: String,
+    val images: Images,
+    val likes: Likes,
+    val link: String,
+    val location: String?,
+    val tags: Array<String>,
+    val type: String,
+    val user: User,
+    val user_has_liked: Boolean,
+    val attribution: String?,
+    val users_in_photo: Array<String>?
+)
 
 @JsonSerializable
 data class Pagination(
@@ -58,6 +85,16 @@ data class User(
     val full_name: String,
     val profile_picture: String,
     val username: String
+)
+
+@JsonSerializable
+data class Likes(
+    val count: Int
+)
+
+@JsonSerializable
+data class Comments(
+    val count: Int
 )
 
 data class ImageRecord(

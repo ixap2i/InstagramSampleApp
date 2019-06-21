@@ -63,8 +63,6 @@ class KtorFloapApi : FloapApi, ImageRepository {
         try {
             lateinit var response: Response
 
-//            .headers(okhttp3.Headers.of("", "", ""))
-
             val request = Request.Builder()
                 .url("$apiEndpoint$ACCESS_TOKEN_KEY")
                 .build()
