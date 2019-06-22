@@ -1,5 +1,7 @@
 package com.ixap2i.floap
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.ktor.http.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -71,6 +73,14 @@ class KtorFloapApi : FloapApi, ImageRepository {
                 responseBody = response.body()!!.string()
 
 
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+
+            var jsonAdapter = moshi.adapter(ImageResponceFactory::class.java)
+
+            var data = jsonAdapter.fromJson(responseBody)
+
             if (!response.isSuccessful) throw BadResponseStatusException(response.message(), response)
             responseHeaderHandler(response.headers())
             if (responseDeserializationStrategy != null) {
@@ -92,7 +102,7 @@ class KtorFloapApi : FloapApi, ImageRepository {
                         } catch (jsonError: Throwable) {
                             RequestResult.Unexpected<RESPONSE, ERROR_RESPONSE>(jsonError, responseBody)
                         }
-                    }
+                     }
                     else -> null
                 }?.let {
                     result = it

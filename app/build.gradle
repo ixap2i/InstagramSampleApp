@@ -39,7 +39,7 @@ android {
 }
 
 dependencies {
-    kapt 'se.ansman.kotshi:compiler:2.0'
+    kapt 'se.ansman.kotshi:compiler:2.0.1'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -66,8 +66,8 @@ dependencies {
     implementation "io.ktor:ktor-server-netty:1.2.1"
     implementation "io.ktor:ktor-gson:1.2.1"
 
-    implementation "com.squareup.moshi:moshi:1.8.0"
-    implementation 'se.ansman.kotshi:api:2.0'
+    implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
+    implementation 'se.ansman.kotshi:api:2.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutines_version}"

@@ -1,13 +1,15 @@
 package com.ixap2i.floap
 
-import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.JsonWriter
-import com.squareup.moshi.ToJson
+import androidx.annotation.Nullable
+import com.squareup.moshi.*
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiJsonAdapterFactory
+import java.lang.reflect.Type
 import kotlin.collections.HashMap
+
+
+
 
 // TODO repositoryにlivedataの実装
 // TODO https://qiita.com/Tsutou/items/69a28ebbd69b69e51703
@@ -15,7 +17,31 @@ interface ImageRepository {
     suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse>
 }
 
-@KotshiJsonAdapterFactory
+@JsonClass(generateAdapter = true)
+class ImageResponceFactory: ImageResponceAdapterImpl() {
+    override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
+        val rawType = Types.getRawType(type)
+        if (!annotations.isEmpty()) return null
+        return if (rawType == Data::class.java) {
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+            KotshiDataJsonAdapter(moshi).nullSafe()
+        } else null
+    }
+    @ToJson
+    fun toJson(writer: JsonWriter, value: Data, stringAdapter: JsonAdapter<Data>) {
+        stringAdapter.toJson(writer, value)
+    }
+    @FromJson
+    fun fromJson(json: String) {
+        return // Stringを解析
+    }
+}
+
+@JsonClass(generateAdapter = true)
+abstract class ImageResponceAdapterImpl: JsonAdapter.Factory
+
 abstract class ImageResponceImpl(
     @field:Json(name = "pagination") var pagination: Pagination,
     @field:Json(name = "data") var cookingRecords: Array<Data>
@@ -29,14 +55,7 @@ abstract class ImageResponceImpl(
     }
 }
 
-
-//@KotshiJsonAdapterFactory
-//abstract class ApplicationJsonAdapterFactory : JsonAdapter.Factory {
-//    companion object {
-//        val INSTANCE = KotshiApplicationJsonAdapterFactory()
-//    }
-//}
-
+@KotshiJsonAdapterFactory
 @JsonSerializable
 data class Data(
     val caption: Caption,
@@ -54,7 +73,15 @@ data class Data(
     val user_has_liked: Boolean,
     val attribution: String?,
     val users_in_photo: Array<String>?
-)
+) {
+    companion object {
+        val INSTANCE: Companion = Data
+        @ToJson
+        fun toJson(writer: JsonWriter, value: ImageRecord, stringAdapter: JsonAdapter<ImageRecord>) {
+            stringAdapter.toJson(writer, value)
+        }
+    }
+}
 
 @JsonSerializable
 data class Pagination(
