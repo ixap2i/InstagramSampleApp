@@ -1,15 +1,10 @@
 package com.ixap2i.floap
 
-import androidx.annotation.Nullable
 import com.squareup.moshi.*
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import se.ansman.kotshi.JsonSerializable
 import se.ansman.kotshi.KotshiJsonAdapterFactory
 import java.lang.reflect.Type
-import kotlin.collections.HashMap
-
-
-
 
 // TODO repositoryにlivedataの実装
 // TODO https://qiita.com/Tsutou/items/69a28ebbd69b69e51703
@@ -17,8 +12,12 @@ interface ImageRepository {
     suspend fun getUserImage(): Result<ImageResponse, ImageErrorResponse>
 }
 
+@JsonSerializable
 @JsonClass(generateAdapter = true)
-class ImageResponceFactory: ImageResponceAdapterImpl() {
+data class ImageResponceFactory(
+    @field:Json(name = "pagination") val pagination: Pagination?,
+    @field:Json(name = "data") val data: List<Data>
+): ImageResponceAdapterImpl() {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
         val rawType = Types.getRawType(type)
         if (!annotations.isEmpty()) return null
@@ -26,7 +25,7 @@ class ImageResponceFactory: ImageResponceAdapterImpl() {
             val moshi = Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
                 .build()
-            KotshiDataJsonAdapter(moshi).nullSafe()
+            moshi.adapter(ImageResponceFactory::class.java)
         } else null
     }
     @ToJson
@@ -42,9 +41,11 @@ class ImageResponceFactory: ImageResponceAdapterImpl() {
 @JsonClass(generateAdapter = true)
 abstract class ImageResponceAdapterImpl: JsonAdapter.Factory
 
+
+@JsonClass(generateAdapter = true)
 abstract class ImageResponceImpl(
-    @field:Json(name = "pagination") var pagination: Pagination,
-    @field:Json(name = "data") var cookingRecords: Array<Data>
+    var pagination: Pagination,
+    var cookingRecords: Array<Data>
 ): ImageResponse {
     companion object {
         val INSTANCE: Companion = ImageResponceImpl
@@ -58,7 +59,7 @@ abstract class ImageResponceImpl(
 @KotshiJsonAdapterFactory
 @JsonSerializable
 data class Data(
-    val caption: Caption,
+    @field:Json(name = "caption") val caption: Caption?,
     val comments: Comments,
     val created_time: String,
     val filter: String,
@@ -85,25 +86,24 @@ data class Data(
 
 @JsonSerializable
 data class Pagination(
-    val total: String,
-    val offet: String,
-    val limit: String
+    val total: String?,
+    val offet: String?,
+    val limit: String?
 )
 
 @JsonSerializable
 data class Caption(
-    val id: String,
-    val text: String,
-    val from: List<User>,
-    val created_time: String
+    val created_time: String?,
+    val from: User?,
+    val id: String?,
+    val text: String?
 )
 
 @JsonSerializable
 data class Images(
-    // TODO　文字列数字の組み合わせが入ることへの対処
-    @field:Json(name = "low_resolution") val lowResolution: HashMap<String, String>,
-    @field:Json(name = "standard_resolution") val standardResolution: String,
-    val thumbnail: String
+    @field:Json(name = "thumbnail") val thumbnail: Detail?,
+    @field:Json(name = "low_resolution") val lowResolution: Detail?,
+    @field:Json(name = "standard_resolution") val standardResolution: Detail?
 )
 
 @JsonSerializable
@@ -124,9 +124,17 @@ data class Comments(
     val count: Int
 )
 
+@JsonSerializable
 data class ImageRecord(
     val image_url: String?,
     val comment: String,
     @Json(name = "recipe_type") val recipeType: String?,
     val recorded_at: String?
+)
+
+@JsonSerializable
+data class Detail(
+    val width: String?,
+    val height: String?,
+    val url: String?
 )
