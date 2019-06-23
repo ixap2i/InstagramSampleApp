@@ -86,9 +86,8 @@ class KtorFloapApi : FloapApi, ImageRepository {
             if (responseDeserializationStrategy != null) {
                 result = RequestResult.Success(Json.nonstrict.parse(responseDeserializationStrategy, responseBody))
             } else {
-                // Need to set RESPONSE to Unit when there is no need to parsing JSON
                 @Suppress("UNCHECKED_CAST")
-                result = RequestResult.Success(Unit as RESPONSE)
+                result = RequestResult.Success(data as RESPONSE)
             }
         } catch (e: Throwable) {
             result = RequestResult.Unexpected(e, responseBody)

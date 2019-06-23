@@ -8,6 +8,7 @@ import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
 
 import android.content.Intent
+import android.util.Log
 import android.widget.LinearLayout
 import com.facebook.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -62,9 +63,9 @@ class MainActivity : AppCompatActivity() {
         LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
 
         val imgRepo = get<ImageRepository>()
-
         GlobalScope.launch {
             val result = imgRepo.getUserImage()
+            var datas = (result as Result.Success).value
         }
     }
 

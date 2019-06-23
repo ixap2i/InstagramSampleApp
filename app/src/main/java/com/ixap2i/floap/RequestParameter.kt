@@ -1,6 +1,5 @@
 package com.ixap2i.floap
 
-import io.ktor.util.Hash
 import okhttp3.Response
 
 interface RequestParameter {
@@ -11,21 +10,8 @@ val FILTERED_VAL get() = "[FILTERED]"
 
 
 interface ImageResponse {
-    val attribution: String?
-    val caption: List<Caption>
-    val comments: HashMap<String, Int>
-    val crated_time: String
-    val filter :String
-    val id :String
-    val images :Images
-    val likes: HashMap<String, Int>
-    val link :String
-    val location :String?
-    val tags: Array<String>
-    val type: String
-    val user: User
-    val user_has_liked: Boolean
-    val users_in_photo: Array<String>?
+    val pagination: Pagination?
+    val data: List<Data>
 }
 
 enum class ImageErrorResponse {

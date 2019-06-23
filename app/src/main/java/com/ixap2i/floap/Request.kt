@@ -7,6 +7,8 @@ sealed class Result<T, R> {
 
     fun isSuccess() = this is Success
 
+    fun value(value: T): T = this.value(value)
+
     val failureReason: FailureReason<R>?
         get() = (this as? Failure)?.reason
 

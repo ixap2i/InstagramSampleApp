@@ -15,9 +15,9 @@ interface ImageRepository {
 @JsonSerializable
 @JsonClass(generateAdapter = true)
 data class ImageResponceFactory(
-    @field:Json(name = "pagination") val pagination: Pagination?,
-    @field:Json(name = "data") val data: List<Data>
-): ImageResponceAdapterImpl() {
+    @field:Json(name = "pagination") override val pagination: Pagination?,
+    @field:Json(name = "data") override val data: List<Data>
+): ImageResponceAdapterImpl(), ImageResponse {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
         val rawType = Types.getRawType(type)
         if (!annotations.isEmpty()) return null
@@ -44,7 +44,7 @@ abstract class ImageResponceAdapterImpl: JsonAdapter.Factory
 
 @JsonClass(generateAdapter = true)
 abstract class ImageResponceImpl(
-    var pagination: Pagination,
+    override var pagination: Pagination,
     var cookingRecords: Array<Data>
 ): ImageResponse {
     companion object {
