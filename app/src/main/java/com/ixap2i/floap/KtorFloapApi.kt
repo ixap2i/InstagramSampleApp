@@ -10,19 +10,12 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.Json
 
 
-class KtorFloapApi : FloapApi, ImageRepository {
-    override val OkHttp: Any
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
-
+class KtorFloapApi: ImageRepository {
     private val apiEndpoint = "https://api.instagram.com/v1/users/1298128612/media/recent?access_token="
 
     private val httpClient = OkHttpClient()
 
     private var baseHeaders: Headers = headersOf()
-
-    override fun resetHeader() {
-        baseHeaders = headersOf()
-    }
 
     private fun setBaseHeaders(headers: Headers) {
         val accessToken = headers[ACCESS_TOKEN_KEY]
@@ -43,8 +36,8 @@ class KtorFloapApi : FloapApi, ImageRepository {
         )
     }
 
-    override suspend fun getUserImage() :Result<ImageResponse, ImageErrorResponse> {
-        return createRequestResult<ImageResponse, ImageResponceImpl, ImageErrorResponse>(
+    override suspend fun getUserImage(): Result<ImageResponceFactory, ImageErrorResponse> {
+        return createRequestResult<ImageResponceFactory, ImageResponceFactory, ImageErrorResponse>(
             responseDeserializationStrategy = null,
             errorResponseFactory = ImageErrorResponseFactory
         ) {}.getResult()

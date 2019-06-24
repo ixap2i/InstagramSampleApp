@@ -12,6 +12,10 @@ val FILTERED_VAL get() = "[FILTERED]"
 interface ImageResponse {
     val pagination: Pagination?
     val data: List<Data>
+
+    fun getData() {
+        this.data
+    }
 }
 
 enum class ImageErrorResponse {

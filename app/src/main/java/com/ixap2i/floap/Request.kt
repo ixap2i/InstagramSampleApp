@@ -1,13 +1,13 @@
 package com.ixap2i.floap
 
+import com.typesafe.config.ConfigException
+
 sealed class Result<T, R> {
     class Success<T, R>(val value: T): Result<T, R>()
 
     class Failure<T, R>(val reason: FailureReason<R>) : Result<T, R>()
 
     fun isSuccess() = this is Success
-
-    fun value(value: T): T = this.value(value)
 
     val failureReason: FailureReason<R>?
         get() = (this as? Failure)?.reason

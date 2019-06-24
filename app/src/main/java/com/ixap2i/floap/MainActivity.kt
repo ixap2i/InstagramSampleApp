@@ -10,6 +10,8 @@ import com.facebook.login.LoginManager
 import android.content.Intent
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.facebook.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
@@ -27,23 +29,19 @@ class MainActivity : AppCompatActivity() {
     lateinit var callbackManager: CallbackManager
     lateinit var accessTokenTraker: AccessTokenTracker
     lateinit var imagesTable: LinearLayout
+//    private lateinit var datas: MutableLiveData<Data>
     val accessToken = AccessToken.getCurrentAccessToken()
     val isLoggedIn = accessToken != null && !accessToken.isExpired
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        val viewModel: ImageListViewModel by viewModel()
 
         val appModule = module {
             single { FloapApplication() }
             single { KtorFloapApi() }
             single<ImageRepository> { KtorFloapApi() }
-            viewModel {
-                ImageListViewModel(application)
-            }
         }
 
         startKoin {
@@ -59,13 +57,15 @@ class MainActivity : AppCompatActivity() {
 
         LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("email"))
 
-        accessTokenTraker  = LoginServiceImpl().checkLoginStatus(imagesTable)
+        accessTokenTraker = LoginServiceImpl().checkLoginStatus(imagesTable)
         LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
 
         val imgRepo = get<ImageRepository>()
         GlobalScope.launch {
             val result = imgRepo.getUserImage()
-            var datas = (result as Result.Success).value
+            val datas = (result as Result.Success).value.data.map {
+                it.getDatas
+            }
         }
     }
 
