@@ -6,6 +6,7 @@ buildscript {
     ext.coroutines_version = '1.1.1'
     ext.kotlinx_serialization_runtime_version = '0.11.0'
     ext.life_cycle_version = '2.2.0-alpha01'
+    ext.picasso_version = '2.71828'
     repositories {
         google()
         jcenter()
