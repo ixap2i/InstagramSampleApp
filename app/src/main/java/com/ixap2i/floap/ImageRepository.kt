@@ -1,7 +1,9 @@
 package com.ixap2i.floap
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.squareup.moshi.*
 import se.ansman.kotshi.JsonSerializable
@@ -48,12 +50,10 @@ data class Data(
     val attribution: String?,
     val users_in_photo: Array<String>?
 ): ViewModel() {
-    val getImages: MutableLiveData<Images> by lazy {
-        MutableLiveData<Images>()
-    }
-    val getDatas: MutableLiveData<Data> by lazy {
-        MutableLiveData<Data>()
-    }
+//    private val addressInput = MutableLiveData<String>()
+//    val data: LiveData<String> = Transformations.switchMap(addressInput)  {
+//            address -> repository.getPostCode(address)
+//    }
     companion object {
         val INSTANCE: Companion = Data
         @ToJson
