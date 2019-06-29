@@ -17,6 +17,13 @@
                       android:orientation="vertical"
                       android:visibility="visible">
 
+            <TextView
+                    android:text="リクエストに失敗しました"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/warnText"/>
+
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/main_album_rows"
                     android:layout_width="match_parent"

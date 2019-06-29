@@ -2,16 +2,16 @@ package com.ixap2i.floap
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.ixap2i.floap.databinding.ImageColumnBindingImpl
 import com.squareup.picasso.Picasso
 
 class ImageListAdapter(val imageUrlList: List<Data>): RecyclerView.Adapter<ImageListAdapter.ImageRecordHolder>() {
+
+    class ImageRecordHolder(val image: ImageView): RecyclerView.ViewHolder(image)
+
     override fun onBindViewHolder(holder: ImageRecordHolder, position: Int) {
-        holder.apply {
-            bind(imageUrlList, position)
-        }
+        Picasso.get().load(imageUrlList[position].images.thumbnail!!.url).into(holder.image)
     }
 
     override fun getItemCount(): Int {
@@ -19,18 +19,8 @@ class ImageListAdapter(val imageUrlList: List<Data>): RecyclerView.Adapter<Image
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageRecordHolder {
-        return ImageRecordHolder(
-            DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-                R.layout.image_column, parent, false)
-        )
-    }
-
-
-    class ImageRecordHolder(private val binding: ImageColumnBindingImpl): RecyclerView.ViewHolder(binding.root) {
-        fun bind(datas: List<Data>, position: Int) {
-            binding.apply {
-                Picasso.get().load(datas[position].images.thumbnail!!.url).into(binding.thumbnail)
-            }
-        }
+        val imageView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.image_column, parent, false) as ImageView
+        return ImageRecordHolder(imageView)
     }
 }
