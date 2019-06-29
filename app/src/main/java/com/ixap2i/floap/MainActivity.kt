@@ -8,35 +8,34 @@ import com.facebook.login.widget.LoginButton
 import com.facebook.login.LoginManager
 
 import android.content.Intent
-import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
-import androidx.databinding.adapters.ImageViewBindingAdapter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.recyclerview.widget.GridLayoutManager
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.viewmodel.dsl.viewModel
-import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import java.util.Arrays
+import android.os.StrictMode
+
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var loginButton: LoginButton
     lateinit var callbackManager: CallbackManager
     lateinit var accessTokenTraker: AccessTokenTracker
     lateinit var imagesTable: LinearLayout
+    lateinit var warnText: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-//    private lateinit var imageLiveData: MutableLiveData<Images>
     private lateinit var images: List<Data>
 
     val accessToken = AccessToken.getCurrentAccessToken()
@@ -44,8 +43,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
 
         val appModule = module {
             single { FloapApplication() }
@@ -61,27 +65,34 @@ class MainActivity : AppCompatActivity() {
         }
         loginButton = findViewById(R.id.login_button)
         imagesTable = findViewById(R.id.table_view)
-        viewManager = GridLayoutManager(this@MainActivity, 2)
+        warnText = findViewById(R.id.warnText)
+        viewManager = LinearLayoutManager(this@MainActivity)
         callbackManager = CallbackManager.Factory.create()
 
         LoginManager.getInstance().logInWithReadPermissions(this@MainActivity, Arrays.asList("email"))
 
         accessTokenTraker = LoginServiceImpl().checkLoginStatus(imagesTable)
         LoginServiceImpl().loginCallBack(loginButton, isLoggedIn, imagesTable, callbackManager)
-
         val imgRepo = get<ImageRepository>()
-        GlobalScope.launch {
-            val result = imgRepo.getUserImage()
-            images = (result as Result.Success).value.data
-            viewAdapter = ImageListAdapter(images)
-        }.apply {
-            if(this.isCompleted) {
-                recyclerView = findViewById<RecyclerView>(R.id.main_album_rows).apply {
-                    setHasFixedSize(true)
-                    layoutManager = viewManager
-                    adapter = viewAdapter
+
+        try {
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = imgRepo.getUserImage()
+
+                if(result.isSuccess()) {
+                    images = (result as Result.Success).value.data
+                    viewAdapter = ImageListAdapter(images)
+                    recyclerView = findViewById<RecyclerView>(R.id.main_album_rows).apply {
+                        setHasFixedSize(true)
+                        layoutManager = viewManager
+                        adapter = viewAdapter
+                    }
+                } else {
+                    warnText.visibility = View.VISIBLE
                 }
             }
+        } catch(ex: Exception) {
+            ex.localizedMessage
         }
 
     }
