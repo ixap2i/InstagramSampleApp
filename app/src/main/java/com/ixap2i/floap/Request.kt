@@ -1,7 +1,5 @@
 package com.ixap2i.floap
 
-import com.typesafe.config.ConfigException
-
 sealed class Result<T, R> {
     class Success<T, R>(val value: T): Result<T, R>()
 

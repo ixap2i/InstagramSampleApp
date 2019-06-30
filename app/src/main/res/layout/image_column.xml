@@ -8,7 +8,6 @@
             android:layout_height="200dp"
             app:srcCompat="@drawable/com_facebook_button_background"
             android:id="@+id/thumbnail"
-            android:tooltipText="Image"
             android:scaleType="centerCrop"
             android:layout_gravity="center"
             android:elevation="5dp"

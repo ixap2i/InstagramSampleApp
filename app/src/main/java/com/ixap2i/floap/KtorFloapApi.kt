@@ -27,7 +27,6 @@ class KtorFloapApi: ImageRepository {
             throw IllegalArgumentException("invalid headers")
         }
 
-        // TODO modify headars use companion
         baseHeaders = headersOf(
             ACCESS_TOKEN_KEY to listOf(accessToken),
             CLIENT_KEY to listOf(client),
@@ -43,8 +42,6 @@ class KtorFloapApi: ImageRepository {
         ) {}.getResult()
     }
 
-
-    // TODO  createRequestResult
 
     private suspend fun <RESPONSE, RESPONSE_IMPL : RESPONSE, ERROR_RESPONSE> createRequestResult(
         responseDeserializationStrategy: DeserializationStrategy<RESPONSE_IMPL>? = null,
@@ -113,8 +110,6 @@ class KtorFloapApi: ImageRepository {
             if (this !is Unexpected) return
             val error = e as? BadResponseStatusException ?: return
             if (allowNotFound && error.statusCode.toInt() == 404) return
-
-            // TODO: use e and responseBody to report a request error
         }
 
         fun getResult(): Result<T, R> {

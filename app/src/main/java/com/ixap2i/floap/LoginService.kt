@@ -7,6 +7,10 @@ import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.google.android.material.snackbar.Snackbar
 
+/*
+    This class management UI by facebook login status.
+    If user doesn't logged in, UI will update to display warn message.
+ */
 interface LoginService {
     fun loginCallBack(loginButton: LoginButton, flag: Boolean, eventView: LinearLayout, callbackManager: CallbackManager)
 
@@ -26,7 +30,7 @@ class LoginServiceImpl: LoginService {
         }
     }
 
-    override fun loginCallBack(loginButton: LoginButton, flag: Boolean, eventView: LinearLayout, callbackManager: CallbackManager): Unit {
+    override fun loginCallBack(loginButton: LoginButton, flag: Boolean, eventView: LinearLayout, callbackManager: CallbackManager) {
         loginButton.registerCallback(callbackManager, object: FacebookCallback<LoginResult> {
             override fun onError(error: FacebookException?) {
                 Snackbar.make(loginButton,"An error was occured. Please try at good  cellar condition.", Snackbar.LENGTH_LONG)

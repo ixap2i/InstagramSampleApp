@@ -58,11 +58,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         startKoin {
-            // declare used Android context
             androidContext(this@MainActivity)
-            // declare modules
             modules(appModule)
         }
+
         loginButton = findViewById(R.id.login_button)
         imagesTable = findViewById(R.id.table_view)
         warnText = findViewById(R.id.warnText)

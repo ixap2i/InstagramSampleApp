@@ -2,13 +2,6 @@ package com.ixap2i.floap
 
 import okhttp3.Response
 
-interface RequestParameter {
-    fun toFilterParams(): List<Pair<String, String>>
-}
-
-val FILTERED_VAL get() = "[FILTERED]"
-
-
 interface ImageResponse {
     val pagination: Pagination?
     val data: List<Data>
