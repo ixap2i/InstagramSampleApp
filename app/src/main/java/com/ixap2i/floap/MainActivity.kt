@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
                 if(result.isSuccess()) {
                     images = (result as Result.Success).value.data
-                    viewAdapter = ImageListAdapter(images)
+                    viewAdapter = ImageAdapter(images)
                     recyclerView = findViewById<RecyclerView>(R.id.main_album_rows).apply {
                         setHasFixedSize(true)
                         layoutManager = viewManager
