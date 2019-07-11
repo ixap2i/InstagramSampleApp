@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class ImageAdapter(val imageUrlList: List<Data>): RecyclerView.Adapter<ImageAdapter.ImageRecordHolder>() {
+class ImageAdapter(val imageUrlList: List<ThumbnailImage>): RecyclerView.Adapter<ImageAdapter.ImageRecordHolder>() {
 
     class ImageRecordHolder(val image: ImageView): RecyclerView.ViewHolder(image)
 

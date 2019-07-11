@@ -14,10 +14,10 @@ interface ImageRepository {
 @JsonClass(generateAdapter = true)
 data class ImageResponceFactory(
     @field:Json(name = "pagination") override val pagination: Pagination?,
-    @field:Json(name = "data") override val data: List<Data>
+    @field:Json(name = "data") override val data: List<ThumbnailImage>
 ): ImageResponse {
     @ToJson
-    fun toJson(writer: JsonWriter, value: Data, stringAdapter: JsonAdapter<Data>) {
+    fun toJson(writer: JsonWriter, value: ThumbnailImage, stringAdapter: JsonAdapter<ThumbnailImage>) {
         stringAdapter.toJson(writer, value)
     }
     @FromJson
@@ -28,7 +28,7 @@ data class ImageResponceFactory(
 
 @KotshiJsonAdapterFactory
 @JsonSerializable
-data class Data(
+data class ThumbnailImage(
     val caption: Caption?,
     val comments: Comments,
     val created_time: String,

@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var images: List<Data>
+    private lateinit var images: List<ThumbnailImage>
 
     val accessToken = AccessToken.getCurrentAccessToken()
     val isLoggedIn = accessToken != null && !accessToken.isExpired

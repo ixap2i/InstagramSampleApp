@@ -4,7 +4,7 @@ import okhttp3.Response
 
 interface ImageResponse {
     val pagination: Pagination?
-    val data: List<Data>
+    val data: List<ThumbnailImage>
 
     fun getData() {
         this.data
