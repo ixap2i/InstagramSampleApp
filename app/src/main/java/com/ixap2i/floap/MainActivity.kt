@@ -24,7 +24,8 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import java.util.Arrays
 import android.os.StrictMode
-
+import android.util.Log
+import androidx.lifecycle.LiveData
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var images: List<ThumbnailImage>
+    private lateinit var images: LiveData<List<ThumbnailImage>>
 
     val accessToken = AccessToken.getCurrentAccessToken()
     val isLoggedIn = accessToken != null && !accessToken.isExpired
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 } else {
                     warnText.visibility = View.VISIBLE
+                    Log.d("", result.failureReason.toString())
                 }
             }
         } catch(ex: Exception) {

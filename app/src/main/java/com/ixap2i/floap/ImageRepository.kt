@@ -1,5 +1,8 @@
 package com.ixap2i.floap
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.squareup.moshi.*
 import se.ansman.kotshi.JsonSerializable
@@ -14,7 +17,7 @@ interface ImageRepository {
 @JsonClass(generateAdapter = true)
 data class ImageResponceFactory(
     @field:Json(name = "pagination") override val pagination: Pagination?,
-    @field:Json(name = "data") override val data: List<ThumbnailImage>
+    @field:Json(name = "data") override val data: LiveData<List<ThumbnailImage>>
 ): ImageResponse {
     @ToJson
     fun toJson(writer: JsonWriter, value: ThumbnailImage, stringAdapter: JsonAdapter<ThumbnailImage>) {
@@ -44,7 +47,12 @@ data class ThumbnailImage(
     val user_has_liked: Boolean,
     val attribution: String?,
     val users_in_photo: Array<String>?
-): ViewModel()
+): ViewModel() {
+    @Override
+    fun observe(owner: LifecycleOwner, observer: Observer<in ThumbnailImage>) {
+        observe(owner, observer)
+    }
+}
 
 @JsonSerializable
 data class Pagination(

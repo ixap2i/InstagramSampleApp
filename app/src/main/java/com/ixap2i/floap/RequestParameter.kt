@@ -1,10 +1,11 @@
 package com.ixap2i.floap
 
+import androidx.lifecycle.LiveData
 import okhttp3.Response
 
 interface ImageResponse {
     val pagination: Pagination?
-    val data: List<ThumbnailImage>
+    val data: LiveData<List<ThumbnailImage>>
 
     fun getData() {
         this.data
